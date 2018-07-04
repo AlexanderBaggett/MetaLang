@@ -1,0 +1,33 @@
+﻿//these are both compiler types and language types which makes meta programming easy
+
+
+Int	,								
+Int64,
+double,
+double expression,
+bool,
+bool Expression,
+if statement,
+if expression,
+else statement,
+object,
+list,
+dictionary,
+assignment statement,
+assignment expression,
+lambda expression,
+foreach statement,
+foreach expression,
+method declaration,
+method call,
+method body,
+program start,
+program end,
+program body,
+Declaration_Statement
+class
+class declaration
+class constructor
+class destructor
+namespace
+

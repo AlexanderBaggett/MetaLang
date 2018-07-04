@@ -1,0 +1,23 @@
+﻿main ()
+{
+	
+	TaskPool Tp = new TaskPool();
+
+	Tp: var x = DoSomething(10);
+	Tp: var y = DoSomething(11);
+
+	Tp.Reuse();
+
+	Tp: DoSomething(12);
+	Tp: Dosomething(13);
+}
+
+
+int DoSomething(int howmany)
+{
+	for i..howmany
+	{
+
+	}
+
+}
