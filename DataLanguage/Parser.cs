@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace MetaLanguage
 {
-    class Parser(List<Token> Tokens)
+    class Parser
     {
+       public Parser (List<Token> Tokens)
+        {
 
+        }
     }
 }

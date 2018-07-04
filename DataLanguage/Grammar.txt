@@ -1,0 +1,260 @@
+Grammar Definitions:
+'' denotes terminals
+{} denotes 1 or more of something
+= denotes start of a production
+[] denotes zero or more of something 
+| indiecates choice
+/ indicates choice
+-> indicates context (read as when)
+<> indicates zero or 1 of something
+unlike EBNF we do not punctuate the grammmar. 
+So  there are not commas between terminals.
+And there are no semicolons at the end of productions
+
+
+
+
+Every generated class from these should have a
+-List of tokens
+-List of components
+-A parser 
+-Code it generates
+-optimization options
+
+
+Program =  [Import_Directive]  {Namespace} 
+
+Import_Directive = 
+					| 'using' '(' Directive [',' Directive] ')'
+
+Directive =	
+		| Identifier '=' Identifier
+		| Identifier
+
+qualified_identifier =
+	identifier
+	 | qualified_identifier, '.', identifier;
+
+Namespace = 'namespace' Identifier '{'  {Class}  '}'
+
+Statement = 
+			|Case_Statement
+			|Declaration_Statement
+			|Embedded_Statement
+			|Control_Statement
+
+Case_Statement = 
+				|'case' Case_Value ':'
+				|'case' Case_Value ':' {Statement}  Case_Option
+				|'case' Case_Value {'|' Case_Value} ':'
+				|'case' Case_Value {'|' Case_Value} ':' {Statement}  Case_Option
+				|Constant ':' {Statement} Case_Option
+				|Boolean_expression ':' {Statement} Case_Option
+				|'default' ':' Case_Option
+
+Case_Option =  
+				| 'break'
+				| 'continue'
+				| 'goto'
+
+Case_Value = 
+	| Identifier
+	| Literal
+
+
+Declaration_Statement = 
+						| 'var' Identifier '=' Expression 
+						| StackType Identifier '=' Expression
+						| HeapType Identifier '=' Expression
+						| HeapType Identifier '=' Declaration_Statement
+						| 'var' Identifier '=' Declaration_Statement
+						| HeapType Identifier '=~' Statement
+						| 'var' Identifier '=~' Statement
+
+Control_Statement = 
+					| If_Statement
+					| Iteration_Statement
+					| Switch_Statement
+
+If_Statement =
+	 | 'if' '(' Boolean_expression ')' Embedded_Statement <'else' Embedded_Statement>
+	 | 'if' '(' Boolean_expression ')' Embedded_Statement ['elseif' '(' Boolean_expression ')' Embedded_Statement] <'else' Embedded_Statement>
+	 | 'if' Boolean_expression Embedded_Statement
+	 | 'if' Boolean_expression Embedded_Statement 'elseif' Boolean_expression Embedded_Statement
+	 
+
+for_statement =
+	|'for' '(' [for_initializer], ';' [for_condition] ';' [for_iterator], ')' embedded_statement
+	|'for' For_Range_Expression embedded_statement
+	|'for' Tuple_Pattern 'in' Identifier embedded_statement 
+	|'for' Identifier 'in' Identifier embedded_statement 
+	|'for' Tuple_Pattern 'in' Identifier embedded_statement 'do'
+	|'for' Identifier 'in' Identifier embedded_statement	'do'
+
+
+Tuple_Pattern = 
+	| '(' {Identifier [',' Identifier]} ')'
+	
+Range_Expression = 
+	| Expression '..' Expression
+	| Expression '..' Expression '..' Expression
+
+For_Range_Expression = 
+	| Integer_Expression '..' Integer_Expression
+	| Integer_Expression '..' Integer_Expression '..' Integer_Expression
+
+	
+
+for_initializer =
+	 | Declaration_Statement
+	 | statement_expression_list
+
+for_condition =
+	Boolean_expression
+
+for_iterator =
+	statement_expression_list
+
+Statement_expression_list =
+	 | Statement_expression
+	 | Statement_expression_list, ',' Statement_expression
+
+
+Expression =
+	| Array_Access_Expression
+	| Class_Access_Expression
+	| Dictionary_Access_Expression
+	| If_Expression
+	| Try_Expression
+	| Value_Expression
+	| Lamda_Expression
+	| Unary_Expression
+	| Postfix_Expression
+	| Ternary_Expression
+
+
+Unary_Expression =
+		| Identifier '++'
+		| Identifier '--'
+
+Postfix_Expresion = 
+		| Identifier '.' Identifier
+		| Identifier '??' 'Expression'
+		| Identifier '?.' Identifier
+
+
+Ternary_Expression = 
+	| Boolean_Expression '?' Expression ':' Expression
+
+Array_Access_Expression = Identifier '[' Integer_Expression ']'
+
+Class_Access_Expression = 'this' '.' Identifier
+
+Dictionary_Access_Expression = Identifier '[' Expression ']'
+
+If_Expression = 
+				| 'if' '(' Boolean_Expression ')' '{' Expression '}' ['elseif' '(' Expression ')'Value_Expression ]  <'else' '{' Expression '}'>
+				| 'if' Boolean_Expression 'then' Expression  ['elseif' Boolean_Expression 'then' Expression]    <'else' Expression>
+
+
+Try_Expresion = 'try' '{' Expression '}' {'catch' '(' HeapType Identifier ')' '{' Expresion '}'} < 'finally' '{' Expression '}'
+
+						
+
+
+
+Value_Expression =
+	|HeapType_Expression
+	|StackType_Expression
+
+
+StackType_Expression =
+	|Integer_Expression
+	|Long_Expression
+	|Unsigned_Integer_Expression
+	|Unsigned_Long_Expression
+	|Byte_Expression
+	|Unsigned_Byte_Expression
+	|Double_Expression
+	|Decimal_Expression
+	|Float_Expression
+	|Big_Int_Expression
+	|String_Expression
+	|Struct_Expression
+
+
+
+Assignment_Operator =  
+						| '='
+						| '*='
+						| '/='
+						| '%='
+						| '+='
+						| '-='
+						| '<<='
+						| '>>='
+						| '&='
+						| '^='
+						| '|='
+
+
+		
+
+Class_Declaration = 
+					|<Privacy_Modifier> <'static'> <'sealed'> <'stack'> 'class' Identifier '{' {Class_Member} '}' <':' [Identifier [',' Identifier] ]>
+					|<Privacy_Modifier> <'static'> <'sealed'> <'stack'> 'class' Identifier '(' {Parameter_Declaration}   ')' '{' '}'
+
+Privacy_Modifier = 
+					| 'public'
+					| 'private'
+					| 'protected'
+					| 'internal'
+					| 'protected internal'
+
+
+Parameter_Declaration = Type Identifier
+
+Type = 
+		| Stack_Type
+		| Heap_Type
+
+Class_Member =
+			| Class_Variable_Declaration
+			| Class_Method_Declaration
+			| Class_Constructor
+			| Class_Destructor
+			| Class_Expression_Member
+
+Class_Expression_Member =  <Privacy_Modifier> <'static'> <Method_Member_Modifier> Type '=>' Statement
+
+Class_Method_Declaration = <Privacy_Modifier> <'static'> <Method_Member_Modifier> Type '(' {Parameter_Declaration}   ')' '{' {Statement}   <'return' Expression> '}'
+
+Method_Member_Modifier =
+						| 'virtual'
+						| 'override'
+
+
+Enum_Declaration =
+					|'enum' Identifier '(' {Identifier}    ')'
+					|'enum' Identifier '(' {Identifier ':' Expression}    ')'
+					|'enum' Identifier '{' {Identifier '=' Expression [',' Identifier '=' Expression]} '}'
+					|'enum' Identifier '{' {Identifier [',' Identifier]} '}'
+
+Literal =
+		|String_Literal
+		|Key_Value_Pair_Literal
+		|Tuple_Literal
+		|List_Literal
+		|Array_Literal
+		|Integer_Literal
+		|Double_Literal
+		|Float_Literal
+		|Big_Int_Literal
+		|Long_Literal
+		|Decimal_Literal
+
+Key_Value_Pair_Literal = Input '::' Input
+Tuple_Literal = '(' Input {',' Input} ')'
+String_Literal = '"' input '"'
+Array_Literal = '[|' Range_Pattern '|]'
+List_Literal = '[' Expression [',' Expression]  ']'
