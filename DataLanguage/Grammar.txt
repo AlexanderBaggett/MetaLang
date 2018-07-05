@@ -10,6 +10,7 @@ Grammar Definitions:
 unlike EBNF we do not punctuate the grammmar. 
 So  there are not commas between terminals.
 And there are no semicolons at the end of productions
+// indicates comments
 
 
 
@@ -94,16 +95,7 @@ for_statement =
 
 Tuple_Pattern = 
 	| '(' {Identifier [',' Identifier]} ')'
-	
-Range_Expression = 
-	| Expression '..' Expression
-	| Expression '..' Expression '..' Expression
-
-For_Range_Expression = 
-	| Integer_Expression '..' Integer_Expression
-	| Integer_Expression '..' Integer_Expression '..' Integer_Expression
-
-	
+		
 
 for_initializer =
 	 | Declaration_Statement
@@ -121,36 +113,14 @@ Statement_expression_list =
 
 
 Expression =
-	| Array_Access_Expression
-	| Class_Access_Expression
-	| Dictionary_Access_Expression
+
 	| If_Expression
 	| Try_Expression
 	| Value_Expression
 	| Lamda_Expression
-	| Unary_Expression
-	| Postfix_Expression
-	| Ternary_Expression
+	| Operator_Expression
+	| Null_Replacement_Expression
 
-
-Unary_Expression =
-		| Identifier '++'
-		| Identifier '--'
-
-Postfix_Expresion = 
-		| Identifier '.' Identifier
-		| Identifier '??' 'Expression'
-		| Identifier '?.' Identifier
-
-
-Ternary_Expression = 
-	| Boolean_Expression '?' Expression ':' Expression
-
-Array_Access_Expression = Identifier '[' Integer_Expression ']'
-
-Class_Access_Expression = 'this' '.' Identifier
-
-Dictionary_Access_Expression = Identifier '[' Expression ']'
 
 If_Expression = 
 				| 'if' '(' Boolean_Expression ')' '{' Expression '}' ['elseif' '(' Expression ')'Value_Expression ]  <'else' '{' Expression '}'>
@@ -159,14 +129,10 @@ If_Expression =
 
 Try_Expresion = 'try' '{' Expression '}' {'catch' '(' HeapType Identifier ')' '{' Expresion '}'} < 'finally' '{' Expression '}'
 
-						
-
-
 
 Value_Expression =
 	|HeapType_Expression
 	|StackType_Expression
-
 
 StackType_Expression =
 	|Integer_Expression
@@ -182,7 +148,48 @@ StackType_Expression =
 	|String_Expression
 	|Struct_Expression
 
+Lamda_Expression = 
+	|
+	|
 
+
+
+	//Terminals are Operators here
+Operator_Expression =
+		| Unary_Operator_Expression
+		| Infix_Operator_Expression      
+		| PostFix_Operator_Expression
+		| Ternary_Expression
+
+Unary_Operator_Expression =
+		| Incrememnt_Expression
+		| Decrement_Exprssion 
+		| Negative_Exprssion
+
+Incrememnt_Expression  = Identifier '++'
+Decrement_Exprssion = Identifier '--'
+Negative_Exprssiuon = '-' Identifier
+
+Infix_Operator_Expression = 
+	| Add_Expression
+	| Subtract_Exprssion
+	| Multiply_Expression
+	| Divide_Expression
+	| Modulus_Expression
+	| Assignment_Expression
+	| Range_Expression
+	| For_Range_Expression
+	| Bitshift_Expression
+	| Function_Composition_Expression
+	
+
+
+Add_Expression = Expression '+' Expression
+Subtract_Expression = Exprssion '-' Expression
+Multiply_Expression = Exprssion '*' Expression
+Divide_Exrpession = Expression '/' Expression
+Modulus_Expression = Expression '%' Expression
+Assignment_Expression = Expression Assignment_Operator Expression
 
 Assignment_Operator =  
 						| '='
@@ -196,6 +203,52 @@ Assignment_Operator =
 						| '&='
 						| '^='
 						| '|='
+
+
+Range_Expression = 
+	| Expression '..' Expression
+	| Expression '..' Expression '..' Expression
+
+For_Range_Expression = 
+	| Integer_Expression '..' Integer_Expression
+	| Integer_Expression '..' Integer_Expression '..' Integer_Expression
+
+BitShift_Expression = 
+	| Expression '>>>' Expression
+	| Expression '<<<' Expression
+
+Function_Composition_Expression = 
+	| Expression '>>' Expression
+	| Expression '<<' Expression
+
+
+
+
+					
+Null_Replacement_Expression = Expression '?? Expression
+
+
+
+PostFix_Operator_Expression = 
+		| Array_Access_Expression
+		| NullSafe_Array_Access_Expression
+		| Class_Access_Expression
+		| Dictionary_Access_Expression
+		| Member_Access_Expression
+		| NullSafe_Member_Access_Expression
+
+Array_Access_Expression = Identifier '[' Integer_Expression ']'
+NullSafe_Array_Access_Expression = Identifier '?[' Integer_Expression ']'
+Class_Access_Expression = 'this' '.' Identifier ['.' Identifier]
+Member_Access_Expression = Identifier '.' Identifier ['.' Identifier]
+NullSafe_Member_Access_Expression = Identifier '?.' Identifier ['.' Identifier]  ['?.' Identifier]
+Dictionary_Access_Expression = Identifier '[' Expression ']'
+
+
+
+
+Ternary_Expression = 
+	| Boolean_Expression '?' Expression ':' Expression
 
 
 		

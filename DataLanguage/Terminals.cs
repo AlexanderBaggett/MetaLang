@@ -35,6 +35,8 @@ namespace MetaLanguage
         CloseParens,
         DoubleLeftAngelBracket,
         DoubleRightAngleBracket,
+        TripleLeftAngleBracket,
+        TripleRightAngleBracket,
         GreaterThan,
         LessThan,
         LessthanEqualTo,
@@ -135,6 +137,8 @@ namespace MetaLanguage
             StringToTerminal.Add(")", TerminalType.CloseParens);
             StringToTerminal.Add("<<", TerminalType.DoubleLeftAngelBracket);
             StringToTerminal.Add(">>", TerminalType.DoubleRightAngleBracket);
+            StringToTerminal.Add("<<<", TerminalType.TripleLeftAngleBracket);
+            StringToTerminal.Add(">>>", TerminalType.TripleRightAngleBracket);
             StringToTerminal.Add(">", TerminalType.GreaterThan);
             StringToTerminal.Add("<", TerminalType.LessThan);
             StringToTerminal.Add(">=", TerminalType.GreaterthanEqualTo);
