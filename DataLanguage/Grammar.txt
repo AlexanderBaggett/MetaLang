@@ -116,10 +116,12 @@ Expression =
 
 	| If_Expression
 	| Try_Expression
+	| Parens_Expression
 	| Value_Expression
 	| Lamda_Expression
 	| Operator_Expression
 	| Null_Replacement_Expression
+	| Identifier_Expression
 
 
 If_Expression = 
@@ -129,6 +131,7 @@ If_Expression =
 
 Try_Expresion = 'try' '{' Expression '}' {'catch' '(' HeapType Identifier ')' '{' Expresion '}'} < 'finally' '{' Expression '}'
 
+Parens_Expression = '(' Expression ')'
 
 Value_Expression =
 	|HeapType_Expression
@@ -251,7 +254,8 @@ Ternary_Expression =
 	| Boolean_Expression '?' Expression ':' Expression
 
 
-		
+Identifier_Expression = 
+	| Identifier
 
 Class_Declaration = 
 					|<Privacy_Modifier> <'static'> <'sealed'> <'stack'> 'class' Identifier '{' {Class_Member} '}' <':' [Identifier [',' Identifier] ]>

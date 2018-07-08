@@ -22,17 +22,17 @@ namespace MetaLanguage
 
             fileContents = fileContents.Replace("\t", "");
 
-            var split = fileContents.Split(new string[] { System.Environment.NewLine }, StringSplitOptions.None);
+            var Lines = fileContents.Split(new string[] { System.Environment.NewLine }, StringSplitOptions.None);
 
 
             var Tokens = new List<Token>();
             int linenumber = 0;
-            foreach (var line in split)
+            foreach (var line in Lines)
             {
                 linenumber++;
-                var intermediate = ForceTokenization(line, new string[] {".","(",")","[","]","," });
+                //var intermediate = ForceTokenization(line, new string[] {".","(",")","[","]",",","}","{", });
 
-                intermediate.Split(new char[] { ' ' }).ToList()
+                line.Split(new char[] { ' ' }).ToList()
                     .ForEach(x => Tokens
                     .Add(new Token() {Value=x,LineNumber= linenumber }));
             }
@@ -42,9 +42,47 @@ namespace MetaLanguage
             RemoveEmptyTokens(ref Tokens);
             RejoinStringsWithSpaces(ref Tokens);
             RemoveEmptyTokens(ref Tokens);
+            Tokens  = TokenizeSpecialCharacters(Tokens, new string[] { ".", "(", ")", "[", "]", ",", "}", "{", });
+
+            var Terminals = new Terminals();
+            foreach(var token in Tokens)
+            {
+                token.Terminal = Terminals[token.Value];
+            }
 
             LexedTokens = Tokens;
             var debug = true;
+        }
+        private static List<Token> TokenizeSpecialCharacters(List<Token> Tokens, string [] SpecialCharacters)
+        {
+            Dictionary<int, Token> IndexToToken = new Dictionary<int, Token>();
+            var TokensToRemove = new List<Token>();
+            foreach (var token in Tokens)
+            {
+                int count = 0;
+                int index = Tokens.IndexOf(token); //do not split tokens that are strings or have only 1 character
+                if (token.Value.Length > 1 && !token.Value.StartsWith("\"") && token.Value.ContainsOne(SpecialCharacters))
+                {
+                    token.Value.ToArray().ToList().ForEach(c =>
+                    {
+                        IndexToToken.Add(index + count, new Token()
+                        {
+                            Value = c.ToString(),
+                            LineNumber = token.LineNumber
+                        }
+                            );
+                        count++;
+                    }
+                    );
+                    TokensToRemove.Add(token);
+                }
+            }
+            foreach (var KVP in IndexToToken)
+            {
+                Tokens.Insert(KVP.Key, KVP.Value);
+            }
+            Tokens = Tokens.Except(TokensToRemove).ToList();
+            return Tokens;
         }
 
         private string ForceTokenization(string line, string [] InputPatterns)
@@ -91,7 +129,7 @@ namespace MetaLanguage
                     }
                     catch
                     {
-                        CompilerErrors.Add("No matching \" near " + token.Value);
+                        CompilerErrors.Add("No matching \" near " + token.Value + " on line " +token.LineNumber);
                     }
                 }
             }

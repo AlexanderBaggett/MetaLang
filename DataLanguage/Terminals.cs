@@ -66,6 +66,7 @@ namespace MetaLanguage
         Protected,
         Internal,
         Virtual,
+        Void,
         Static,
         Class,
         Override,
@@ -120,7 +121,7 @@ namespace MetaLanguage
             StringToTerminal.Add("case", TerminalType.Case);
             StringToTerminal.Add("for", TerminalType.For);
             StringToTerminal.Add("foreach", TerminalType.Foreach);
-            StringToTerminal.Add("pforeach", TerminalType.Foreach);
+            StringToTerminal.Add("pforeach", TerminalType.ParallelForeach);
             StringToTerminal.Add("in", TerminalType.In);
             StringToTerminal.Add("do", TerminalType.Do);
             StringToTerminal.Add("while", TerminalType.While);
@@ -177,6 +178,7 @@ namespace MetaLanguage
             StringToTerminal.Add("internal", TerminalType.Internal);
             StringToTerminal.Add("virtual", TerminalType.Virtual);
             StringToTerminal.Add("override", TerminalType.Override);
+            StringToTerminal.Add("void", TerminalType.Void);
             StringToTerminal.Add("class", TerminalType.Class);
             StringToTerminal.Add("static", TerminalType.Internal);
             StringToTerminal.Add("enum", TerminalType.Enum);
@@ -189,7 +191,6 @@ namespace MetaLanguage
             StringToTerminal.Add("double", TerminalType.StackTypeDouble);
             StringToTerminal.Add("float", TerminalType.StackTypeFloat);
             StringToTerminal.Add("decimal", TerminalType.StackTypeDecimal);
-            StringToTerminal.Add("byte", TerminalType.StackTypeByte);
             StringToTerminal.Add("struct", TerminalType.StackTypeStruct);
             StringToTerminal.Add("null", TerminalType.StackTypeNull);
 
