@@ -64,13 +64,19 @@ Case_Value =
 
 
 Declaration_Statement = 
-						| 'var' Identifier '=' Expression 
-						| StackType Identifier '=' Expression
-						| HeapType Identifier '=' Expression
-						| HeapType Identifier '=' Declaration_Statement
-						| 'var' Identifier '=' Declaration_Statement
-						| HeapType Identifier '=~' Statement
-						| 'var' Identifier '=~' Statement
+						| Declaration_Type Identifier '='  Expression 
+						| Declaration_Type Identifier '=~' Statement
+						| Declaration_Type Identifier '=~' Class_Declaration
+
+
+
+Declaration_Type =
+					| 'var'
+					| StackType
+					| HeapType
+
+Declaration_Identifier
+
 
 Control_Statement = 
 					| If_Statement
@@ -240,8 +246,16 @@ PostFix_Operator_Expression =
 		| Member_Access_Expression
 		| NullSafe_Member_Access_Expression
 
-Array_Access_Expression = Identifier '[' Integer_Expression ']'
-NullSafe_Array_Access_Expression = Identifier '?[' Integer_Expression ']'
+Array_Access_Expression = 
+							| Identifier '[' Expression ']'
+							| Identifier '[' Range_Expression   ']'
+							| Identifier '[' Expression [',' Expression] ']'
+
+NullSafe_Array_Access_Expression =
+									| Identifier '?[' Expression ']'
+									| Identifier '?[' Range_Expression   ']'
+									| Identifier '?[' Expression [',' Expression] ']'
+
 Class_Access_Expression = 'this' '.' Identifier ['.' Identifier]
 Member_Access_Expression = Identifier '.' Identifier ['.' Identifier]
 NullSafe_Member_Access_Expression = Identifier '?.' Identifier ['.' Identifier]  ['?.' Identifier]

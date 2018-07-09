@@ -104,6 +104,7 @@ namespace MetaLanguage
         Do,
         Then,
         While,
+        EOF,
 
 
 

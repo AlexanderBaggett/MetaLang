@@ -49,7 +49,8 @@ namespace MetaLanguage
             {
                 token.Terminal = Terminals[token.Value];
             }
-
+            //Add End of File Token.
+            Tokens.Add(new Token() { Value = "", LineNumber = -1, Terminal = TerminalType.EOF });
             LexedTokens = Tokens;
             var debug = true;
         }
