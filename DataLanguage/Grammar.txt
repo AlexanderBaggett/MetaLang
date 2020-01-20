@@ -152,14 +152,15 @@ Try_Expresion = 'try' '{' Expression '}' {'catch' '(' HeapType Identifier ')' '{
 Parens_Expression = '(' Expression ')'
 
 Value_Expression =
-	|HeapType_Expression
-	|StackType_Expression
-	|Identifier
+	| HeapType_Expression
+	| StackType_Expression
+	| Identifier
+	| Method_Invocation
 
 StackType_Expression =
-	|Boolean_Expression 
-	|Struct_Expression
-	|Literal
+	| Boolean_Expression 
+	| Struct_Expression
+	| Literal
 	
 Boolean_Expression=
 	| Boolean_Literal
