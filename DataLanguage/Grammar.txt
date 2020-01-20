@@ -29,8 +29,8 @@ Import_Directive =
 					| 'using' '(' Directive [',' Directive] ')'
 
 Directive =	
-		| Identifier '=' Identifier
-		| Identifier
+	| Identifier '=' Identifier
+	| Identifier
 
 Qualified_identifier =
 	Identifier
@@ -39,24 +39,24 @@ Qualified_identifier =
 Namespace = 'namespace' Identifier '{'  {Class}  '}'
 
 Statement = 
-			| Declaration_Statement
-			| Embedded_Statement
-			| Control_Statement
-			| Assignment_Expression
-			| Method_Invocation
-			| Iteration_Statement
+	| Declaration_Statement
+	| Embedded_Statement
+	| Control_Statement
+	| Assignment_Expression
+	| Method_Invocation
+	| Iteration_Statement
 
 
 Embedded_Statement = '{' {Statement '\n'} '}'
 
 Case_Statement = 
-				|'case' Case_Value ':'
-				|'case' Case_Value ':' {Statement}  Case_Option
-				|'case' Case_Value {'|' Case_Value} ':'
-				|'case' Case_Value {'|' Case_Value} ':' {Statement}  Case_Option
-				| Literal ':' {Statement} Case_Option
-				| Boolean_Expression ':' {Statement} Case_Option
-				|'default' ':' Case_Option
+	|'case' Case_Value ':'
+	|'case' Case_Value ':' {Statement}  Case_Option
+	|'case' Case_Value {'|' Case_Value} ':'
+	|'case' Case_Value {'|' Case_Value} ':' {Statement}  Case_Option
+	| Literal ':' {Statement} Case_Option
+	| Boolean_Expression ':' {Statement} Case_Option
+	|'default' ':' Case_Option
 
 Case_Option =  
 				| 'break'
@@ -224,17 +224,17 @@ Modulus_Expression = Expression '%' Expression
 Assignment_Expression = Expression Assignment_Operator Expression
 
 Assignment_Operator =  
-						| '='
-						| '*='
-						| '/='
-						| '%='
-						| '+='
-						| '-='
-						| '<<='
-						| '>>='
-						| '&='
-						| '^='
-						| '|='
+	| '='
+	| '*='
+	| '/='
+	| '%='
+	| '+='
+	| '-='
+	| '<<='
+	| '>>='
+	| '&='
+	| '^='
+	| '|='
 
 Range_Expression = 
 	| Expression '..' Expression
@@ -251,27 +251,27 @@ BitShift_Expression =
 Function_Composition_Expression = 
 	| Expression '>>' Expression
 	| Expression '<<' Expression
-	
+
 					
 Null_Replacement_Expression = Expression '?? Expression
 
 PostFix_Operator_Expression = 
-		| Array_Access_Expression
-		| NullSafe_Array_Access_Expression
-		| Class_Access_Expression
-		| Dictionary_Access_Expression
-		| Member_Access_Expression
-		| NullSafe_Member_Access_Expression
+	| Array_Access_Expression
+	| NullSafe_Array_Access_Expression
+	| Class_Access_Expression
+	| Dictionary_Access_Expression
+	| Member_Access_Expression
+	| NullSafe_Member_Access_Expression
 
 Array_Access_Expression = 
-							| Identifier '[' Expression ']'
-							| Identifier '[' Range_Expression   ']'
-							| Identifier '[' Expression [',' Expression] ']'
+	| Identifier '[' Expression ']'
+	| Identifier '[' Range_Expression   ']'
+	| Identifier '[' Expression [',' Expression] ']'
 
 NullSafe_Array_Access_Expression =
-									| Identifier '?[' Expression ']'
-									| Identifier '?[' Range_Expression   ']'
-									| Identifier '?[' Expression [',' Expression] ']'
+	| Identifier '?[' Expression ']'
+	| Identifier '?[' Range_Expression   ']'
+	| Identifier '?[' Expression [',' Expression] ']'
 
 Class_Access_Expression = 'this' '.' Identifier ['.' Identifier]
 Member_Access_Expression = Identifier '.' Identifier ['.' Identifier]
@@ -289,58 +289,58 @@ Identifier_Expression =
 	| Identifier
 
 Class_Declaration = 
-					|<Privacy_Modifier> <'static'> <'sealed'> <'stack'> 'class' Identifier '{' {Class_Member} '}' <':' [Identifier [',' Identifier] ]>
+	|<Privacy_Modifier> <'static'> <'sealed'> <'stack'> 'class' Identifier '{' {Class_Member} '}' <':' [Identifier [',' Identifier] ]>
 					|<Privacy_Modifier> <'static'> <'sealed'> <'stack'> 'class' Identifier '(' {Parameter_Declaration}   ')' '{' '}'
 
 Privacy_Modifier = 
-					| 'public'
-					| 'private'
-					| 'protected'
-					| 'internal'
-					| 'protected internal'
+	| 'public'
+	| 'private'
+	| 'protected'
+	| 'internal'
+	| 'protected internal'
 
 
 Parameter_Declaration = Type Identifier
 
 Type = 
-		| Stack_Type
-		| Heap_Type
+	| Stack_Type
+	| Heap_Type
 
 Class_Member =
-			| Class_Variable_Declaration
-			| Class_Method_Declaration
-			| Class_Constructor
-			| Class_Destructor
-			| Class_Expression_Member
+	| Class_Variable_Declaration
+	| Class_Method_Declaration
+	| Class_Constructor
+	| Class_Destructor
+	| Class_Expression_Member
 
 Class_Expression_Member =  <Privacy_Modifier> <'static'> <Method_Member_Modifier> Type '=>' Statement
 
 Class_Method_Declaration = <Privacy_Modifier> <'static'> <Method_Member_Modifier> Type '(' {Parameter_Declaration}   ')' '{' {Statement}   <'return' Expression> '}'
 
 Method_Member_Modifier =
-						| 'virtual'
-						| 'override'
+			| 'virtual'
+			| 'override'
 
 
 Enum_Declaration =
-					|'enum' Identifier '(' {Identifier}    ')'
-					|'enum' Identifier '(' {Identifier ':' Expression}    ')'
-					|'enum' Identifier '{' {Identifier '=' Expression [',' Identifier '=' Expression]} '}'
-					|'enum' Identifier '{' {Identifier [',' Identifier]} '}'
+	|'enum' Identifier '(' {Identifier}    ')'
+	|'enum' Identifier '(' {Identifier ':' Expression}    ')'
+	|'enum' Identifier '{' {Identifier '=' Expression [',' Identifier '=' Expression]} '}'
+	|'enum' Identifier '{' {Identifier [',' Identifier]} '}'
 
 Literal =
-		|String_Literal
-		|Key_Value_Pair_Literal
-		|Tuple_Literal
-		|List_Literal
-		|Array_Literal
-		|Integer_Literal
-		|Double_Literal
-		|Float_Literal
-		|Big_Int_Literal
-		|Long_Literal
-		|Decimal_Literal
-		|Boolean_Literal
+	|String_Literal
+	|Key_Value_Pair_Literal
+	|Tuple_Literal
+	|List_Literal
+	|Array_Literal
+	|Integer_Literal
+	|Double_Literal
+	|Float_Literal
+	|Big_Int_Literal
+	|Long_Literal
+	|Decimal_Literal
+	|Boolean_Literal
 
 Key_Value_Pair_Literal = Expression '::' Expression
 Tuple_Literal = '(' Input {',' Input} ')'
