@@ -12,7 +12,7 @@ So  there are not commas between terminals.
 And there are no semicolons at the end of productions
 // indicates comments
 
-
+//Terminals are defined using string constants or regular expressions
 
 
 Every generated class from these should have a
@@ -158,8 +158,8 @@ StackType_Expression =
 	|Struct_Expression
 
 Lamda_Expression = 
-	|
-	|
+	| identifier '=>' Expression
+	| '(' identifier [',' identifier] ')' '=>' Expression
 
 
 
@@ -323,9 +323,11 @@ Literal =
 		|Big_Int_Literal
 		|Long_Literal
 		|Decimal_Literal
+		|Boolean_Literal
 
-Key_Value_Pair_Literal = Input '::' Input
+Key_Value_Pair_Literal = Expression '::' Expression
 Tuple_Literal = '(' Input {',' Input} ')'
 String_Literal = '"' input '"'
 Array_Literal = '[|' Range_Pattern '|]'
 List_Literal = '[' Expression [',' Expression]  ']'
+Boolean_Literal = 'true' | 'false'
