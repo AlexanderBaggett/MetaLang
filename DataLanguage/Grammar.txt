@@ -25,18 +25,18 @@ Every generated class from these should have a
 
 Program =  [Import_Directive]  {Namespace} 
 
-Import_Directive = 
-					| 'using' '(' Directive [',' Directive] ')'
+Import_Directive = 'using' '(' Directive [',' Directive] ')'
 
 Directive =	
 	| Identifier '=' Identifier
 	| Identifier
 
 Qualified_identifier =
-	Identifier
+	 | Identifier
 	 | Qualified_identifier, '.', Identifier;
 
-Namespace = 'namespace' Identifier '{'  {Class}  '}'
+//need to think if everthing should live in a class or not.
+Namespace = 'namespace' Identifier '{'  {Class_Declaration}  '}'
 
 Statement = 
 	| Declaration_Statement
@@ -45,7 +45,6 @@ Statement =
 	| Assignment_Expression
 	| Method_Invocation
 	| Iteration_Statement
-
 
 Embedded_Statement = '{' {Statement '\n'} '}'
 
@@ -59,9 +58,9 @@ Case_Statement =
 	|'default' ':' Case_Option
 
 Case_Option =  
-				| 'break'
-				| 'continue'
-				| 'goto'
+	| 'break'
+	| 'continue'
+	| 'goto'
 
 Case_Value = 
 	| Identifier
@@ -69,22 +68,20 @@ Case_Value =
 
 Identifier = [a-zA-Z$_][a-zA-Z0-9$_]*
 
-
 Declaration_Statement = 
-						| Declaration_Type Identifier '='  Expression 
-						| Declaration_Type Identifier '=~' Statement
-						| Declaration_Type Identifier '=~' Class_Declaration
+	| Declaration_Type Identifier '='  Expression 
+	| Declaration_Type Identifier '=~' Statement
+	| Declaration_Type Identifier '=~' Class_Declaration
 
 Declaration_Type =
-					| 'var'
-					| StackType
-					| HeapType
-
+	| 'var'
+	| StackType
+	| HeapType
 
 Control_Statement = 
-					| If_Statement
-					| Iteration_Statement
-					| Switch_Statement
+	| If_Statement
+	| Iteration_Statement
+	| Switch_Statement
 
 Switch_Statement =  'switch' '(' Expression ')'  { '\n' Case_Statement }
 
@@ -94,11 +91,10 @@ If_Statement =
 	 | 'if' Boolean_Expression Embedded_Statement
 	 | 'if' Boolean_Expression Embedded_Statement 'elseif' Boolean_Expression Embedded_Statement
 	 
-
-
-Iteration_Statement = | For_Statement
-		      | While_Statement
-		      | Foreach_Statement
+Iteration_Statement =
+	| For_Statement
+	| While_Statement
+	| Foreach_Statement
 		   
 While_Statement =  'while' '(' Boolean_Expression ')' Embedded_Statement
 
@@ -129,22 +125,22 @@ Statement_Expression_list =
 	 | Statement_expression
 	 | Statement_expression_list, ',' Statement_expression
 
-
 Expression =
-
-	| If_Expression
+	| Control_Expression
 	| Try_Expression
 	| Parens_Expression
 	| Value_Expression
 	| Lamda_Expression
 	| Operator_Expression
 	| Null_Replacement_Expression
-	| Identifier_Expression
 
+Control_Expression =
+	| If_Expression
+	| Ternary_Expression
 
 If_Expression = 
-				| 'if' '(' Boolean_Expression ')' '{' Expression '}' ['elseif' '(' Expression ')'Value_Expression ]  <'else' '{' Expression '}'>
-				| 'if' Boolean_Expression 'then' Expression  ['elseif' Boolean_Expression 'then' Expression]    <'else' Expression>
+	| 'if' '(' Boolean_Expression ')' '{' Expression '}' ['elseif' '(' Expression ')'Value_Expression ]  <'else' '{' Expression '}'>
+	| 'if' Boolean_Expression 'then' Expression  ['elseif' Boolean_Expression 'then' Expression]    <'else' Expression>
 
 
 Try_Expresion = 'try' '{' Expression '}' {'catch' '(' HeapType Identifier ')' '{' Expresion '}'} < 'finally' '{' Expression '}'
@@ -157,6 +153,8 @@ Value_Expression =
 	| Identifier
 	| Method_Invocation
 
+Method_Invocation = Identifier '(' Expression ')'
+
 StackType_Expression =
 	| Boolean_Expression 
 	| Struct_Expression
@@ -167,8 +165,7 @@ Boolean_Expression=
 	| {Expression [Boolean_Control_Operator Expression]
 	| '!' Expression
 	|  '(' Expression ')'
-	
-	
+		
 Boolean_Control_Operator=
 	| '&&'
 	| '||'
@@ -185,19 +182,17 @@ Lamda_Expression =
 	| Identifier '=>' Expression
 	| '(' Identifier [',' Identifier] ')' '=>' Expression
 
-
-
 	//Terminals are Operators here
 Operator_Expression =
-		| Unary_Operator_Expression
-		| Infix_Operator_Expression      
-		| PostFix_Operator_Expression
-		| Ternary_Expression
+	| Unary_Operator_Expression
+	| Infix_Operator_Expression      
+	| PostFix_Operator_Expression
+	| Ternary_Expression
 
 Unary_Operator_Expression =
-		| Incrememnt_Expression
-		| Decrement_Exprssion 
-		| Negative_Exprssion
+	| Incrememnt_Expression
+	| Decrement_Exprssion 
+	| Negative_Exprssion
 
 Incrememnt_Expression  = Identifier '++'
 Decrement_Exprssion = Identifier '--'
@@ -215,7 +210,6 @@ Infix_Operator_Expression =
 	| Bitshift_Expression
 	| Function_Composition_Expression
 	
-
 Add_Expression = Expression '+' Expression
 Subtract_Expression = Exprssion '-' Expression
 Multiply_Expression = Exprssion '*' Expression
@@ -249,9 +243,12 @@ BitShift_Expression =
 	| Expression '<<<' Expression
 
 Function_Composition_Expression = 
-	| Expression '>>' Expression
-	| Expression '<<' Expression
-
+	| (Identifier | Function_Expression) '>>' (Identifier | Function_Expression)
+	| (Identifier | Function_Expression) '<<' (Identifier | Function_Expression)
+	
+Function_Expression = 
+	| Lambda_Expression
+	//| Identifier
 					
 Null_Replacement_Expression = Expression '?? Expression
 
@@ -278,15 +275,9 @@ Member_Access_Expression = Identifier '.' Identifier ['.' Identifier]
 NullSafe_Member_Access_Expression = Identifier '?.' Identifier ['.' Identifier]  ['?.' Identifier]
 Dictionary_Access_Expression = Identifier '[' Expression ']'
 
-
-
-
 Ternary_Expression = 
 	| Boolean_Expression '?' Expression ':' Expression
 
-
-Identifier_Expression = 
-	| Identifier
 
 Class_Declaration = 
 	|<Privacy_Modifier> <'static'> <'sealed'> <'stack'> 'class' Identifier '{' {Class_Member} '}' <':' [Identifier [',' Identifier] ]>
@@ -298,7 +289,6 @@ Privacy_Modifier =
 	| 'protected'
 	| 'internal'
 	| 'protected internal'
-
 
 Parameter_Declaration = Type Identifier
 
@@ -318,9 +308,8 @@ Class_Expression_Member =  <Privacy_Modifier> <'static'> <Method_Member_Modifier
 Class_Method_Declaration = <Privacy_Modifier> <'static'> <Method_Member_Modifier> Type '(' {Parameter_Declaration}   ')' '{' {Statement}   <'return' Expression> '}'
 
 Method_Member_Modifier =
-			| 'virtual'
-			| 'override'
-
+	| 'virtual'
+	| 'override'
 
 Enum_Declaration =
 	|'enum' Identifier '(' {Identifier}    ')'
