@@ -32,25 +32,30 @@ Directive =
 		| Identifier '=' Identifier
 		| Identifier
 
-qualified_identifier =
-	identifier
-	 | qualified_identifier, '.', identifier;
+Qualified_identifier =
+	Identifier
+	 | Qualified_identifier, '.', Identifier;
 
 Namespace = 'namespace' Identifier '{'  {Class}  '}'
 
 Statement = 
-			|Case_Statement
-			|Declaration_Statement
-			|Embedded_Statement
-			|Control_Statement
+			| Declaration_Statement
+			| Embedded_Statement
+			| Control_Statement
+			| Assignment_Expression
+			| Method_Invocation
+			| Iteration_Statement
+
+
+Embedded_Statement = '{' {Statement '\n'} '}'
 
 Case_Statement = 
 				|'case' Case_Value ':'
 				|'case' Case_Value ':' {Statement}  Case_Option
 				|'case' Case_Value {'|' Case_Value} ':'
 				|'case' Case_Value {'|' Case_Value} ':' {Statement}  Case_Option
-				|Constant ':' {Statement} Case_Option
-				|Boolean_expression ':' {Statement} Case_Option
+				| Literal ':' {Statement} Case_Option
+				| Boolean_Expression ':' {Statement} Case_Option
 				|'default' ':' Case_Option
 
 Case_Option =  
@@ -62,26 +67,26 @@ Case_Value =
 	| Identifier
 	| Literal
 
+Identifier = [a-zA-Z$_][a-zA-Z0-9$_]*
+
 
 Declaration_Statement = 
 						| Declaration_Type Identifier '='  Expression 
 						| Declaration_Type Identifier '=~' Statement
 						| Declaration_Type Identifier '=~' Class_Declaration
 
-
-
 Declaration_Type =
 					| 'var'
 					| StackType
 					| HeapType
-
-Declaration_Identifier
 
 
 Control_Statement = 
 					| If_Statement
 					| Iteration_Statement
 					| Switch_Statement
+
+Switch_Statement =  'switch' '(' Expression ')'  { '\n' Case_Statement }
 
 If_Statement =
 	 | 'if' '(' Boolean_Expression ')' Embedded_Statement <'else' Embedded_Statement>
@@ -90,30 +95,37 @@ If_Statement =
 	 | 'if' Boolean_Expression Embedded_Statement 'elseif' Boolean_Expression Embedded_Statement
 	 
 
-for_statement =
-	|'for' '(' [for_initializer], ';' [for_condition] ';' [for_iterator], ')' embedded_statement
-	|'for' For_Range_Expression embedded_statement
-	|'for' Tuple_Pattern 'in' Identifier embedded_statement 
-	|'for' Identifier 'in' Identifier embedded_statement 
-	|'for' Tuple_Pattern 'in' Identifier embedded_statement 'do'
-	|'for' Identifier 'in' Identifier embedded_statement	'do'
+
+Iteration_Statement = | For_Statement
+		      | While_Statement
+		      | Foreach_Statement
+		   
+While_Statement =  'while' '(' Boolean_Expression ')' Embedded_Statement
+
+Foreach_Statement = 'foreach' '(' Declaration_Statement 'in' Identifier ')' Embedded_Statement
+
+For_Statement =
+	|'for' '(' [for_initializer], ';' [for_condition] ';' [for_iterator], ')' Embedded_Statement
+	|'for' For_Range_Expression Embedded_Statement
+	|'for' Tuple_Pattern 'in' Identifier Embedded_Statement 
+	|'for' Identifier 'in' Identifier Embedded_Statement 
+	|'for' Tuple_Pattern 'in' Identifier Embedded_Statement 'do'
+	|'for' Identifier 'in' Identifier 'do' Expression
 
 
-Tuple_Pattern = 
-	| '(' {Identifier [',' Identifier]} ')'
+Tuple_Pattern =   '(' {Identifier [',' Identifier]} ')'
 		
 
 for_initializer =
 	 | Declaration_Statement
-	 | statement_expression_list
+	 | Statement_Expression_list
 
-for_condition =
-	Boolean_expression
+for_condition = Boolean_expression
 
 for_iterator =
-	statement_expression_list
+	Statement_Expression_list
 
-Statement_expression_list =
+Statement_Expression_list =
 	 | Statement_expression
 	 | Statement_expression_list, ',' Statement_expression
 
@@ -161,10 +173,16 @@ Boolean_Control_Operator=
 	| '||'
 	| '=='
 	| '!="
+	| '&'
+	| '|'
+	| '<'
+	| '<='
+	| '>'
+	| '>='
 		
 Lamda_Expression = 
-	| identifier '=>' Expression
-	| '(' identifier [',' identifier] ')' '=>' Expression
+	| Identifier '=>' Expression
+	| '(' Identifier [',' Identifier] ')' '=>' Expression
 
 
 
@@ -197,7 +215,6 @@ Infix_Operator_Expression =
 	| Function_Composition_Expression
 	
 
-
 Add_Expression = Expression '+' Expression
 Subtract_Expression = Exprssion '-' Expression
 Multiply_Expression = Exprssion '*' Expression
@@ -218,7 +235,6 @@ Assignment_Operator =
 						| '^='
 						| '|='
 
-
 Range_Expression = 
 	| Expression '..' Expression
 	| Expression '..' Expression '..' Expression
@@ -234,14 +250,9 @@ BitShift_Expression =
 Function_Composition_Expression = 
 	| Expression '>>' Expression
 	| Expression '<<' Expression
-
-
-
-
+	
 					
 Null_Replacement_Expression = Expression '?? Expression
-
-
 
 PostFix_Operator_Expression = 
 		| Array_Access_Expression
