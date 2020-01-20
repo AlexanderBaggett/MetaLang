@@ -84,10 +84,10 @@ Control_Statement =
 					| Switch_Statement
 
 If_Statement =
-	 | 'if' '(' Boolean_expression ')' Embedded_Statement <'else' Embedded_Statement>
-	 | 'if' '(' Boolean_expression ')' Embedded_Statement ['elseif' '(' Boolean_expression ')' Embedded_Statement] <'else' Embedded_Statement>
-	 | 'if' Boolean_expression Embedded_Statement
-	 | 'if' Boolean_expression Embedded_Statement 'elseif' Boolean_expression Embedded_Statement
+	 | 'if' '(' Boolean_Expression ')' Embedded_Statement <'else' Embedded_Statement>
+	 | 'if' '(' Boolean_Expression ')' Embedded_Statement ['elseif' '(' Boolean_Expression ')' Embedded_Statement] <'else' Embedded_Statement>
+	 | 'if' Boolean_Expression Embedded_Statement
+	 | 'if' Boolean_Expression Embedded_Statement 'elseif' Boolean_Expression Embedded_Statement
 	 
 
 for_statement =
@@ -142,21 +142,26 @@ Parens_Expression = '(' Expression ')'
 Value_Expression =
 	|HeapType_Expression
 	|StackType_Expression
+	|Identifier
 
 StackType_Expression =
-	|Integer_Expression
-	|Long_Expression
-	|Unsigned_Integer_Expression
-	|Unsigned_Long_Expression
-	|Byte_Expression
-	|Unsigned_Byte_Expression
-	|Double_Expression
-	|Decimal_Expression
-	|Float_Expression
-	|Big_Int_Expression
-	|String_Expression
+	|Boolean_Expression 
 	|Struct_Expression
-
+	|Literal
+	
+Boolean_Expression=
+	| Boolean_Literal
+	| {Expression [Boolean_Control_Operator Expression]
+	| '!' Expression
+	|  '(' Expression ')'
+	
+	
+Boolean_Control_Operator=
+	| '&&'
+	| '||'
+	| '=='
+	| '!="
+		
 Lamda_Expression = 
 	| identifier '=>' Expression
 	| '(' identifier [',' identifier] ')' '=>' Expression
