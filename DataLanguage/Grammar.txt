@@ -69,9 +69,10 @@ Case_Value =
 Identifier = [a-zA-Z$_][a-zA-Z0-9$_]*
 
 Declaration_Statement = 
-	| Declaration_Type Identifier '='  Expression 
-	| Declaration_Type Identifier '=~' Statement
-	| Declaration_Type Identifier '=~' Class_Declaration
+	//Normal declaration
+	| Declaration_Type Identifier '='  Expression  
+	 //Metaprogramming declaration
+	| Declaration_Type Identifier '=~' Statement | Class_Declaration | Class_Member | Declaration_Statement
 
 Declaration_Type =
 	| 'var'
