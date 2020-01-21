@@ -20,6 +20,7 @@
 //-List of components
 //-A parser 
 //-Code it generates
+//-A visual tree of AST Nodes
 //-optimization options
 
 
