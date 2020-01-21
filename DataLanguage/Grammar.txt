@@ -1,26 +1,26 @@
-Grammar Definitions:
-'' denotes terminals
-{} denotes 1 or more of something
-= denotes start of a production
-[] denotes zero or more of something 
-| indiecates choice
-/ indicates choice
--> indicates context (read as when)
-<> indicates zero or 1 of something
-unlike EBNF we do not punctuate the grammmar. 
-So  there are not commas between terminals.
-And there are no semicolons at the end of productions
-// indicates comments
+// Grammar Definitions:
+// '' denotes terminals
+// {} denotes 1 or more of something
+// = denotes start of a production
+// [] denotes zero or more of something 
+// | indiecates choice
+// / indicates choice
+// -> indicates context (read as when)
+// <> indicates zero or 1 of something
+// //unlike EBNF we do not punctuate the grammmar. 
+// There are not commas between terminals.
+// There are no semicolons at the end of productions
+// These are comments
 
 //Terminals are defined using string constants or regular expressions
 
 
-Every generated class from these should have a
--List of tokens
--List of components
--A parser 
--Code it generates
--optimization options
+//Every generated class from these should have a
+//-List of tokens
+//-List of components
+//-A parser 
+//-Code it generates
+//-optimization options
 
 
 Program =  [Import_Directive]  {Namespace} 
@@ -66,6 +66,10 @@ Case_Value =
 	| Identifier
 	| Literal
 
+Identifier_Pointer = '*' Identifier
+
+Identifier_Address = '&' Identifier
+
 Identifier = [a-zA-Z$_][a-zA-Z0-9$_]*
 
 Declaration_Statement = 
@@ -99,16 +103,42 @@ Iteration_Statement =
 		   
 While_Statement =  'while' '(' Boolean_Expression ')' Embedded_Statement
 
-Foreach_Statement = 'foreach' '(' Declaration_Statement 'in' Identifier ')' Embedded_Statement
-
 For_Statement =
-	|'for' '(' [for_initializer], ';' [for_condition] ';' [for_iterator], ')' Embedded_Statement
-	|'for' For_Range_Expression Embedded_Statement
-	|'for' Tuple_Pattern 'in' Identifier Embedded_Statement 
-	|'for' Identifier 'in' Identifier Embedded_Statement 
-	|'for' Tuple_Pattern 'in' Identifier Embedded_Statement 'do'
-	|'for' Identifier 'in' Identifier 'do' Expression
+	| For_Start [for_initializer], ';' [Boolean_expression] ';' [for_iterator], ')' Embedded_Statement
+	| For_Start  For_Range_Expression ')' Embedded_Statement
+	| For_Start  For_Iteration_Value 'in' For_Iterator_Source For_End
 
+For_Expression
+	| 'for' For_Iteration_Value 'in' For_Iterator_Source 'do' Expression
+	| 'for' For_Iteration_Value 'in' For_Iterator_Source '=>' Expression
+
+
+For_Start = 
+	| 'for' '('
+	| <'parallel' Integer_Literal> 'for' '('
+	| <'parallel' Identifier> 'for' '('
+
+For_End = 
+	| ')' Embedded_Statement
+	| ')' 'do' Expression    
+	| ')' Embedded_Statement 'do'
+	| ')' '=>' Expression
+	| ')' '=>' Embedded_Statement
+	
+For_Iterator_Source =
+	| Identifier
+	| List_Literal
+	| Tuple_Pattern
+	| Array_Literal
+	| Integer_Expression '..' Integer_Expression
+
+For_Iteration_Value = 
+	| Identifier
+	| Declaration_Statement
+
+For_Range_Expression = 
+	| Integer_Expression '..' Integer_Expression
+	| Integer_Expression '..' Integer_Expression '..' Integer_Expression
 
 Tuple_Pattern =   '(' {Identifier [',' Identifier]} ')'
 		
@@ -116,8 +146,6 @@ Tuple_Pattern =   '(' {Identifier [',' Identifier]} ')'
 for_initializer =
 	 | Declaration_Statement
 	 | Statement_Expression_list
-
-for_condition = Boolean_expression
 
 for_iterator =
 	Statement_Expression_list
@@ -134,6 +162,10 @@ Expression =
 	| Lamda_Expression
 	| Operator_Expression
 	| Null_Replacement_Expression
+	| Iteration_Expression
+
+Iteration_Expression =
+	| For_Expression
 
 Control_Expression =
 	| If_Expression
@@ -166,6 +198,7 @@ Boolean_Expression=
 	| {Expression [Boolean_Control_Operator Expression]
 	| '!' Expression
 	|  '(' Expression ')'
+	| Expression
 		
 Boolean_Control_Operator=
 	| '&&'
@@ -234,10 +267,6 @@ Assignment_Operator =
 Range_Expression = 
 	| Expression '..' Expression
 	| Expression '..' Expression '..' Expression
-
-For_Range_Expression = 
-	| Integer_Expression '..' Integer_Expression
-	| Integer_Expression '..' Integer_Expression '..' Integer_Expression
 
 BitShift_Expression = 
 	| Expression '>>>' Expression
