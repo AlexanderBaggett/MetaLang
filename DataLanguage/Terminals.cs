@@ -11,6 +11,7 @@ namespace MetaLanguage
         Else,
         ElseIf,
         Equals,
+        Parallel,
         EqualsEquals,
         NotEquals,
         Number,  //sometimes we don't know the number's type without context
@@ -100,8 +101,6 @@ namespace MetaLanguage
         Switch,
         Case,
         For,
-        Foreach,
-        ParallelForeach,
         In,
         Do,
         Then,
@@ -123,9 +122,8 @@ namespace MetaLanguage
             StringToTerminal.Add("else", TerminalType.Else);
             StringToTerminal.Add("elseif", TerminalType.ElseIf);
             StringToTerminal.Add("case", TerminalType.Case);
+            StringToTerminal.Add("parallel", TerminalType.For);
             StringToTerminal.Add("for", TerminalType.For);
-            StringToTerminal.Add("foreach", TerminalType.Foreach);
-            StringToTerminal.Add("pforeach", TerminalType.ParallelForeach);
             StringToTerminal.Add("in", TerminalType.In);
             StringToTerminal.Add("do", TerminalType.Do);
             StringToTerminal.Add("while", TerminalType.While);
