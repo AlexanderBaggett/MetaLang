@@ -305,8 +305,7 @@ Member_Access_Expression = Identifier '.' Identifier ['.' Identifier]
 NullSafe_Member_Access_Expression = Identifier '?.' Identifier ['.' Identifier]  ['?.' Identifier]
 Dictionary_Access_Expression = Identifier '[' Expression ']'
 
-Ternary_Expression = 
-	| Boolean_Expression '?' Expression ':' Expression
+Ternary_Expression = Boolean_Expression '?' Expression ':' Expression
 
 
 Class_Declaration = 
