@@ -46,7 +46,7 @@ Statement =
 	| Method_Invocation
 	| Iteration_Statement
 
-Embedded_Statement = '{' {Statement '\n'} '}'
+Embedded_Statement = '{' [Statement [ '\n' Statement] ] '}'
 
 Case_Statement = 
 	|'case' Case_Value ':'
@@ -318,18 +318,18 @@ Enum_Declaration =
 	|'enum' Identifier '{' {Identifier [',' Identifier]} '}'
 
 Literal =
-	|String_Literal
-	|Key_Value_Pair_Literal
-	|Tuple_Literal
-	|List_Literal
-	|Array_Literal
-	|Integer_Literal
-	|Double_Literal
-	|Float_Literal
-	|Big_Int_Literal
-	|Long_Literal
-	|Decimal_Literal
-	|Boolean_Literal
+	| String_Literal
+	| Key_Value_Pair_Literal
+	| Tuple_Literal
+	| List_Literal
+	| Array_Literal
+	| Integer_Literal
+	| Double_Literal
+	| Float_Literal
+	| Big_Int_Literal
+	| Long_Literal
+	| Decimal_Literal
+	| Boolean_Literal
 
 Key_Value_Pair_Literal = Expression '::' Expression
 Tuple_Literal = '(' Input {',' Input} ')'
