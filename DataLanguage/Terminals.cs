@@ -23,6 +23,8 @@ namespace MetaLanguage
         UnsignedLong,
         String,
         Identifier,
+        IdentifierAddress,
+        IdentifierPointer,
         CompilerError,
         Colon,
         DoubleColon,
@@ -105,6 +107,7 @@ namespace MetaLanguage
         Then,
         While,
         EOF,
+        MetaProgrammingTerminal
 
 
 
@@ -173,6 +176,7 @@ namespace MetaLanguage
             StringToTerminal.Add("&&", TerminalType.AndAnd);
             StringToTerminal.Add("|", TerminalType.Bar);
             StringToTerminal.Add("||", TerminalType.BarBar);
+            StringToTerminal.Add("=~", TerminalType.MetaProgrammingTerminal);
             StringToTerminal.Add("public", TerminalType.Public);
             StringToTerminal.Add("private", TerminalType.Private);
             StringToTerminal.Add("protected", TerminalType.Protected);
@@ -223,31 +227,28 @@ namespace MetaLanguage
                         //case 'ul': return TerminalType.UnsignedLong;
                     }
                 } //It's a string
-                else if (TokenValue.StartsWithMulti(new string[] { "\"","@"}))
+                else if (TokenValue.StartsWithMulti(new string[] { "\"","@"}) &&  TokenValue[TokenValue.Length - 1] =='"')
                 {
                     return TerminalType.String;
                 }
                 else
                 {
-                    try
-                    {  // It's a known terminal
+                    if(StringToTerminal.ContainsKey(TokenValue)
+                    {
+                        // It's a known terminal
                         return StringToTerminal[TokenValue];
+                    } 
+                    else if (TokenValue[0]=="&")
+                    {
+                        return TerminalType.IndentierAddress;
                     }
-                    catch
-                    {       
-                        if (TokenValue.StartsWithMulti(new string[] { "!", "#", "%", "^", "&", "*", "_", "-","$" }))
-                        {
-                            return TerminalType.CompilerError;
-                        }
-                        //It's an identifier.
-                        return TerminalType.Identifier;
+                    else if (TokenValue[0]=="*")
+                    {
+                        return TerminalType.IndentierPointer;
                     }
+                    
+                    return TerminalType.CompilerError;
                 }
-                return TerminalType.CompilerError;
             }
-        }
-
-   
     }
-
 }
